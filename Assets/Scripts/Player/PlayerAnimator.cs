@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerAnimator : MonoBehaviour
 {
@@ -48,8 +49,16 @@ public class PlayerAnimator : MonoBehaviour
 
 	private void DoLanding(bool runAfterLand)
 	{
-		animator.Play("PlayerLand");
-		animator.SetBool("runAfterLand", runAfterLand);
+		if (runAfterLand)
+		{
+			animator.Play("PlayerRun");
+		}
+		else
+		{
+			animator.Play("PlayerLand");
+			animator.SetBool("runAfterLand", runAfterLand);
+		}
+
 		ObjectCreator.instance.CreateLandParticles(player.feetPos.position);
 
 		SoundManager.instance.PlayOneShot(SoundManager.Sound.Land);

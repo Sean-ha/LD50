@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
 	private Tween velocityOffsetTween;
 	private Vector2 velocityOffset = Vector2.zero;
 
+	private float jumpAssist;
+
 	public enum PlayerState
 	{
 		Idling,
@@ -74,6 +76,7 @@ public class PlayerController : MonoBehaviour
 		isGrounded = IsGrounded();
 
 		currAttackCooldown -= Time.deltaTime;
+		jumpAssist -= Time.deltaTime;
 
 		if (!isAttacking)
 		{
@@ -90,6 +93,7 @@ public class PlayerController : MonoBehaviour
 		CheckState();
 
 
+		// Release jump
 		if (currState == PlayerState.Jumping || currState == PlayerState.DoubleJumping)
 		{
 			if (Input.GetKeyUp(KeyCode.Space))
@@ -120,7 +124,7 @@ public class PlayerController : MonoBehaviour
 			// Determine state
 			if (isGrounded)
 			{
-				if (currState != PlayerState.Jumping && currState != PlayerState.DoubleJumping)
+				if ((currState != PlayerState.Jumping && currState != PlayerState.DoubleJumping))
 				{
 					// Grounded and standing still / moving
 					if (Mathf.Approximately(rb.velocity.x, 0))
@@ -132,31 +136,40 @@ public class PlayerController : MonoBehaviour
 				// Grounded and press space
 				if (Input.GetKeyDown(KeyCode.Space) && currJumps < maxJumps)
 				{
-					currState = PlayerState.Jumping;
-					rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-					currJumps += 1;
-					SetJumpLock();
-
-					ObjectCreator.instance.CreateJumpParticles(feetPos.position);
-					SoundManager.instance.PlayOneShot(SoundManager.Sound.Jump);
+					DoJump();
 				}
 			}
 			else
 			{
 				if (rb.velocity.y < 0)
 				{
+					// Just ran off a platform, set jump assist time
+					if (currState == PlayerState.Running)
+					{
+						jumpAssist = 0.1f;
+					}
+
 					currState = PlayerState.Falling;
 				}
 
 				if (Input.GetKeyDown(KeyCode.Space) && currJumps < maxJumps)
 				{
-					currState = PlayerState.DoubleJumping;
-					rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
-					currJumps = 2;
-					SetJumpLock();
+					// Has jump assist, do a jump instead of double jump
+					if (jumpAssist > 0)
+					{
+						DoJump();
+					}
+					// No jump assist, do double jump
+					else
+					{
+						currState = PlayerState.DoubleJumping;
+						rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
+						currJumps = 2;
+						SetJumpLock();
 
-					ObjectCreator.instance.CreateDoubleJumpParticles(feetPos.position);
-					SoundManager.instance.PlayOneShot(SoundManager.Sound.DoubleJump);
+						ObjectCreator.instance.CreateDoubleJumpParticles(feetPos.position);
+						SoundManager.instance.PlayOneShot(SoundManager.Sound.DoubleJump);
+					}
 				}
 			}
 
@@ -172,6 +185,17 @@ public class PlayerController : MonoBehaviour
 		// Attack state overrides all other states
 		if (isAttacking)
 			currState = PlayerState.Attacking;
+	}
+
+	private void DoJump()
+	{
+		currState = PlayerState.Jumping;
+		rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+		currJumps += 1;
+		SetJumpLock();
+
+		ObjectCreator.instance.CreateJumpParticles(feetPos.position);
+		SoundManager.instance.PlayOneShot(SoundManager.Sound.Jump);
 	}
 
 	private void CheckAttackInput()
@@ -202,7 +226,7 @@ public class PlayerController : MonoBehaviour
 
 	private bool IsGrounded()
 	{
-		Collider2D overlap = Physics2D.OverlapBox(feetPos.position, new Vector2(0.3f, 0.02f), 0f, groundLayers);
+		Collider2D overlap = Physics2D.OverlapBox(feetPos.position, new Vector2(0.45f, 0.02f), 0f, groundLayers);
 		
 
 		if (overlap != null)

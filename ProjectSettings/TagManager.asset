@@ -39,6 +39,9 @@ TagManager:
   - 
   - PostProcess
   m_SortingLayers:
+  - name: BG
+    uniqueID: 3202071227
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

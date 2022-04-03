@@ -22,25 +22,27 @@ public class MapGenerator : MonoBehaviour
 	public void CreateGroundSegment(Transform source, GroundSegment segment)
 	{
 		// Generate right or left side (or both)
-		if (!segment.rightExists)
+		if (segment.right == null)
 		{
 			Vector2 nextGroundPos = (Vector2)source.position + new Vector2(source.localScale.x - 1, 0);
 			GameObject rightGround = Instantiate(groundObject, nextGroundPos, Quaternion.identity);
-			rightGround.transform.GetChild(0).GetComponent<GroundSegment>().leftExists = true;
+			GroundSegment rightSegment = rightGround.transform.GetChild(0).GetComponent<GroundSegment>();
+			rightSegment.left = segment;
 
 			GeneratePlatforms(rightGround.transform);
 
-			segment.rightExists = true;
+			segment.right = rightSegment;
 		}
-		if (!segment.leftExists)
+		if (segment.left == null)
 		{
 			Vector2 nextGroundPos = (Vector2)source.position - new Vector2(source.localScale.x - 1, 0);
 			GameObject leftGround = Instantiate(groundObject, nextGroundPos, Quaternion.identity);
-			leftGround.transform.GetChild(0).GetComponent<GroundSegment>().rightExists = true;
+			GroundSegment leftSegment = leftGround.transform.GetChild(0).GetComponent<GroundSegment>();
+			leftSegment.right = segment;
 
 			GeneratePlatforms(leftGround.transform);
 
-			segment.leftExists = true;
+			segment.left = leftSegment;
 		}
 	}
 
@@ -48,35 +50,32 @@ public class MapGenerator : MonoBehaviour
 	{
 		float leftXPos = source.position.x - source.localScale.x / 2f;
 
-		// Leftmost platform will be the lowest
-		// TODO: Might not clamp to pixel units, might be an issue where player is raised by 1 pixel
-		float lowYPos = Random.Range(minYHeight, minYHeight);
-		Transform lowPlatform = CreatePlatform(new Vector2(leftXPos, lowYPos));
-
 		// Generate left aligned platforms with varying heights (and x offsets)
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			float xPos = leftXPos + Random.Range(0, 11);
-			// [4-9]; [10-15]; [16-21]; [22-27]
-			float yPos = Random.Range(minYHeight + 4 + (6 * i), minYHeight + 9 + (6 * i));
+			// [0-5]; [6-11]; [12-17]; [18-23]; [24-29]
+			float yPos = Random.Range(minYHeight + (6 * i), minYHeight + 5 + (6 * i));
 
-			CreatePlatformRecursive(new Vector2(xPos, yPos), source.position.x + source.localScale.x / 2);
+			CreatePlatformRecursive(source, new Vector2(xPos, yPos), source.position.x + source.localScale.x / 2);
 		}
 	}
 
-	private void CreatePlatformRecursive(Vector2 start, float endpointX)
+	private void CreatePlatformRecursive(Transform parent, Vector2 start, float endpointX)
 	{
 		if (start.x >= endpointX)
 			return;
 
 		Transform left = CreatePlatform(start);
+		left.parent = parent;
 
-		int gap = Random.Range(2, 11);
+		int gap = Random.Range(5, 11);
+
 		int heightDiff = Random.Range(-4, 5);
 		Vector2 nextPos = new Vector2(start.x + left.localScale.x + gap, start.y + heightDiff);
 		
 		nextPos.y = Mathf.Clamp(minYHeight, (int)nextPos.y, maxYHeight);
-		CreatePlatformRecursive(nextPos, endpointX);
+		CreatePlatformRecursive(parent, nextPos, endpointX);
 	}
 
 	private Transform CreatePlatform(Vector2 position)
