@@ -16,7 +16,7 @@ public class PlayerHealthWrapper : MonoBehaviour
 		myHealthSystem = GetComponent<HealthSystem>();
 	}
 
-	private void Start()
+	public void StartBleeding()
 	{
 		bleedingOutCR = StartCoroutine(BleedingOut());
 	}

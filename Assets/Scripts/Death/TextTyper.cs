@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DeathText : MonoBehaviour
+public class TextTyper : MonoBehaviour
 {
-	[SerializeField] private DeathStrings strings;
+	[SerializeField] private StringList strings;
 
 	private TextMeshPro tmp;
 
@@ -14,10 +14,10 @@ public class DeathText : MonoBehaviour
 		tmp = GetComponent<TextMeshPro>();
 	}
 
-	public void DisplayDeathText(System.Action onComplete)
+	public void DisplayString(System.Action onComplete)
 	{
 		// Get random death string
-		List<string> strs = strings.deathStrings;
+		List<string> strs = strings.strList;
 
 		string chosen = strs[Random.Range(0, strs.Count)];
 

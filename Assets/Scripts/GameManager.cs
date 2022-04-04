@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 
+	[SerializeField] private SpriteRenderer fadeInBlack;
+	[SerializeField] private TextTyper startTextTyper;
+
 	[SerializeField] private SpriteRenderer solidBG;
 	[SerializeField] private EnemySpawner spawner;
 	[SerializeField] private PlayerHealthWrapper healthWrapper;
-	[SerializeField] private DeathText deathText;
+	[SerializeField] private TextTyper deathText;
 	[SerializeField] private TextMeshPro summaryText;
 	[SerializeField] private GameObject continueButton;
 
@@ -38,8 +41,45 @@ public class GameManager : MonoBehaviour
 	private void Start()
 	{
 		player = PlayerController.instance;
+
+		fadeInBlack.color = Color.black;
+
+		// Disable game systems
+		PlayerController.instance.gameObject.SetActive(false);
+
+		DOVirtual.DelayedCall(0.5f, () =>
+		{
+			startTextTyper.gameObject.SetActive(true);
+			startTextTyper.DisplayString(() =>
+			{
+				StartCoroutine(FadeIn());
+			});
+		}, ignoreTimeScale: false);
+	}
+
+	private IEnumerator FadeIn()
+	{
+		yield return new WaitForSeconds(0.75f);
+
+		PlayerController.instance.gameObject.SetActive(true);
+		fadeInBlack.DOColor(new Color(0, 0, 0, 0), 0.75f);
+
+		yield return new WaitForSeconds(1f);
+
+		startTextTyper.GetComponent<TextMeshPro>().DOColor(new Color(0, 0, 0, 0), 0.75f);
+
+		yield return new WaitForSeconds(1f);
+
+		StartGame();
+	}
+
+	// Actually begins the game systems
+	private void StartGame()
+	{
 		healthLossCR = StartCoroutine(ManageHealthLossStat());
 		timeSurvivedCR = StartCoroutine(TimeSurvived());
+		spawner.StartSpawning();
+		healthWrapper.StartBleeding();
 	}
 
 	private IEnumerator ManageHealthLossStat()
@@ -101,7 +141,7 @@ public class GameManager : MonoBehaviour
 				DOVirtual.DelayedCall(1f, () => 
 				{
 					deathText.gameObject.SetActive(true);
-					deathText.DisplayDeathText(() =>
+					deathText.DisplayString(() =>
 					{
 						DOVirtual.DelayedCall(0.5f, () => StartCoroutine(ShowSummary()));
 					});

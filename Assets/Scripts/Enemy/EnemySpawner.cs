@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
 	private Coroutine difficultyCR1, difficultyCR2;
 
 
-	private void Start()
+	public void StartSpawning()
 	{
 		spawningCR = StartCoroutine(EnemySpawning());
 		difficultyCR1 = StartCoroutine(RampUpDifficulty1());

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class DeathStrings : ScriptableObject
+public class StringList : ScriptableObject
 {
 	[TextArea(3, 8)]
-	public List<string> deathStrings;
+	public List<string> strList;
 }
