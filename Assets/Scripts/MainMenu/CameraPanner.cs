@@ -11,7 +11,7 @@ public class CameraPanner : MonoBehaviour
 
 	private void Awake()
 	{
-		ppc = GetComponent<PixelPerfectCamera>();
+		ppc = GetComponentInChildren<PixelPerfectCamera>();
 	}
 
 	private void Update()

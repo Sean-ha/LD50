@@ -16,7 +16,14 @@ public class PlayerAnimator : MonoBehaviour
 	public void SetAnimation(PlayerController player, PlayerController.PlayerState newAnim)
 	{
 		this.player = player;
-		if (currAnim == newAnim || attackLock)
+
+		if (newAnim == PlayerController.PlayerState.Dead)
+		{
+			animator.Play("PlayerDead");
+			return;
+		}
+		
+		if (currAnim == newAnim || attackLock || currAnim == PlayerController.PlayerState.Dead)
 			return;
 
 		switch (newAnim)
@@ -41,9 +48,6 @@ public class PlayerAnimator : MonoBehaviour
 				break;
 			case PlayerController.PlayerState.Falling:
 				animator.Play("PlayerFall");
-				break;
-			case PlayerController.PlayerState.Dead:
-				animator.Play("PlayerDead");
 				break;
 		}
 

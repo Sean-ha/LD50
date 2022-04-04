@@ -8,8 +8,13 @@ public class PlayButton : MonoBehaviour
 {
 	[SerializeField] private SpriteRenderer blackScreen;
 
+	private bool clickable = true;
+
 	private void OnMouseDown()
 	{
+		if (!clickable)
+			return;
+
 		Transform t = ObjectCreator.instance.CreateHitParticles(transform.position).transform;
 		t.parent = Camera.main.transform;
 		t = ObjectCreator.instance.CreateExpandingExplosion(transform.position, Color.white, 4f, 0.2f).transform;
@@ -21,5 +26,7 @@ public class PlayButton : MonoBehaviour
 		{
 			SceneManager.LoadScene("SampleScene");
 		});
+
+		clickable = false;
 	}
 }

@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: DeathStrings
   m_EditorClassIdentifier: 
   deathStrings:
-  - farewell, swordsman
+  - farewell, swordsman.
+  - suffer no more, traveler
+  - I free you of this curse
+  - till we meet again
+  - so long, dear wanderer

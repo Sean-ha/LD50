@@ -17,6 +17,7 @@ public class SoundManager : MonoBehaviour
 		PlayerHurt = 8,
 		EnemySpawn = 9,
 		TypeSound = 10,
+		SwordUnsheath = 11,
 	}
 
 	[System.Serializable]

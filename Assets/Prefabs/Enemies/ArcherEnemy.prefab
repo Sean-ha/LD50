@@ -293,7 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myHealthSystem: {fileID: 1239654276277433329}
   arrowObject: {fileID: 1756522373299351973, guid: 4bb7dbbd1164e5242a08b3ff49fbfb6b, type: 3}
-  shootCooldown: 5
+  shootCooldown: 0
   arrowSpeed: 8
   arrowDamage: 100
   myAnimator: {fileID: 1239654276135239461}

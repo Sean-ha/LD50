@@ -133,8 +133,17 @@ public class GameManager : MonoBehaviour
 
 		yield return new WaitForSeconds(0.35f);
 
+		int oldHighScore = PlayerPrefs.GetInt("HighScore", 0);
+
 		int score = 100 * enemiesSlain + 25 * secondsSurvived;
 		text += "\n\nscore: " + score;
+
+		if (score > oldHighScore)
+		{
+			text += " (new high score)";
+			PlayerPrefs.SetInt("HighScore", score);
+		}
+
 		UpdateSummaryText(text);
 
 		yield return new WaitForSeconds(0.35f);
