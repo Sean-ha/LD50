@@ -8,34 +8,68 @@ public class EnemySpawner : MonoBehaviour
 
 	[SerializeField] private GameObject archerEnemy;
 
-	[SerializeField] private float timeToSpawnNext;
+	[SerializeField] private float timeToSpawnNextCluster;
+	[SerializeField] private int spawnsPerCluster;
 
 	private HashSet<BehavingEnemy> enemies = new HashSet<BehavingEnemy>();
 
 	private Coroutine spawningCR;
+	private Coroutine difficultyCR1, difficultyCR2;
+
 
 	private void Start()
 	{
 		spawningCR = StartCoroutine(EnemySpawning());
+		difficultyCR1 = StartCoroutine(RampUpDifficulty1());
+		difficultyCR2 = StartCoroutine(RampUpDifficulty2());
 	}
 
 	private IEnumerator EnemySpawning()
 	{
 		while (true)
 		{
-			yield return new WaitForSeconds(timeToSpawnNext);
+			yield return new WaitForSeconds(timeToSpawnNextCluster);
 
-			Vector2 spawnPos = detector.GetSpawnPoint();
-			ObjectCreator.instance.CreateEnemySpawnParticles(spawnPos);
-			ObjectCreator.instance.CreateExpandingExplosion(spawnPos, Color.black, 2f, 0.2f);
-			SoundManager.instance.PlayPositionedOneShot(SoundManager.Sound.EnemySpawn, spawnPos);
-			GameObject enemy = Instantiate(archerEnemy, spawnPos, Quaternion.identity);
 
-			var behav = enemy.GetComponentInChildren<BehavingEnemy>();
+			for (int i = 0; i < spawnsPerCluster; i++)
+			{
+				Vector2 spawnPos = detector.GetSpawnPoint();
+				ObjectCreator.instance.CreateEnemySpawnParticles(spawnPos);
+				ObjectCreator.instance.CreateExpandingExplosion(spawnPos, Color.black, 2f, 0.2f);
+				SoundManager.instance.PlayPositionedOneShot(SoundManager.Sound.EnemySpawn, spawnPos);
+				GameObject enemy = Instantiate(archerEnemy, spawnPos, Quaternion.identity);
 
-			behav.myHealthSystem.onDeath.AddListener(() => enemies.Remove(behav));
+				var behav = enemy.GetComponentInChildren<BehavingEnemy>();
 
-			enemies.Add(behav);
+				behav.myHealthSystem.onDeath.AddListener(() => enemies.Remove(behav));
+
+				enemies.Add(behav);
+
+				yield return new WaitForSeconds(0.15f);
+			}
+		}
+	}
+
+	// Shortens spawn timer
+	private IEnumerator RampUpDifficulty1()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(10f);
+
+			// Will reach shortest time in 270 secs
+			timeToSpawnNextCluster = Mathf.Max(timeToSpawnNextCluster - 0.1f, 0.8f);
+		}
+	}
+
+	// Increases number of spawns per cluster
+	private IEnumerator RampUpDifficulty2()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(30f);
+
+			spawnsPerCluster += 1;
 		}
 	}
 
@@ -43,6 +77,12 @@ public class EnemySpawner : MonoBehaviour
 	{
 		if (spawningCR != null)
 			StopCoroutine(spawningCR);
+
+		if (difficultyCR1 != null)
+			StopCoroutine(difficultyCR1);
+
+		if (difficultyCR2 != null)
+			StopCoroutine(difficultyCR2);
 	}
 
 	public void KillAllBehaviors()

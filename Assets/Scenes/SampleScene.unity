@@ -4574,7 +4574,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detector: {fileID: 787449583}
   archerEnemy: {fileID: 1239654276277433340, guid: 6df2297dfc9c5c74ea642da097d6cc58, type: 3}
-  timeToSpawnNext: 1
+  timeToSpawnNextCluster: 3.5
+  spawnsPerCluster: 4
 --- !u!114 &1330926167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6947,6 +6948,10 @@ PrefabInstance:
     - target: {fileID: 5710020764579931213, guid: 9519903a4405ce04c93168137bfd41a3, type: 3}
       propertyPath: m_Name
       value: HeartEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710020764579931213, guid: 9519903a4405ce04c93168137bfd41a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9519903a4405ce04c93168137bfd41a3, type: 3}

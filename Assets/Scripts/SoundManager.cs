@@ -18,6 +18,7 @@ public class SoundManager : MonoBehaviour
 		EnemySpawn = 9,
 		TypeSound = 10,
 		SwordUnsheath = 11,
+		Hover = 12,
 	}
 
 	[System.Serializable]
@@ -37,11 +38,15 @@ public class SoundManager : MonoBehaviour
 	// For very short clips only
 	private AudioSource randomPitchSource;
 
-	private float sfxVolume = 0.25f;
+	private float sfxVolume;
 
 	private void Awake()
 	{
 		instance = this;
+
+		sfxVolume = PlayerPrefs.GetFloat("sfx", 0.25f);
+		PlayerPrefs.SetFloat("sfx", sfxVolume);
+
 		// Build dictionary from list
 		foreach (SoundAndClip sac in sounds)
 		{
@@ -110,5 +115,19 @@ public class SoundManager : MonoBehaviour
 		float volumeDelta = vol - sfxVolume;
 
 		PlayOneShot(sound, createNewSource: true, randomizePitch: randomizePitch, volumeDelta: volumeDelta);
+	}
+
+	public void AdjustVolume(float delta)
+	{
+		sfxVolume += delta;
+
+		sfxVolume = Mathf.Clamp(sfxVolume, 0f, 1f);
+
+		PlayerPrefs.SetFloat("sfx", sfxVolume);
+	}
+
+	public float GetVolume()
+	{
+		return sfxVolume;
 	}
 }

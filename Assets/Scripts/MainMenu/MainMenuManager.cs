@@ -17,6 +17,7 @@ public class MainMenuManager : MonoBehaviour
 	[SerializeField] private GameObject playButton;
 	[SerializeField] private GameObject quitButton;
 	[SerializeField] private GameObject highScoreText;
+	[SerializeField] private GameObject sfxAdjuster;
 
 	private void Start()
 	{
@@ -30,6 +31,7 @@ public class MainMenuManager : MonoBehaviour
 		playButton.SetActive(false);
 		quitButton.SetActive(false);
 		highScoreText.SetActive(false);
+		sfxAdjuster.SetActive(false);
 
 		blackScreen2.color = Color.black;
 
@@ -62,13 +64,21 @@ public class MainMenuManager : MonoBehaviour
 		yield return new WaitForSeconds(0.75f);
 
 		playButton.SetActive(true);
+		SoundManager.instance.PlayOneShot(SoundManager.Sound.TypeSound);
 
 		yield return new WaitForSeconds(0.5f);
 
 		quitButton.SetActive(true);
+		SoundManager.instance.PlayOneShot(SoundManager.Sound.TypeSound);
 
 		yield return new WaitForSeconds(0.5f);
 
 		highScoreText.SetActive(true);
+		SoundManager.instance.PlayOneShot(SoundManager.Sound.TypeSound);
+
+		yield return new WaitForSeconds(0.5f);
+
+		sfxAdjuster.SetActive(true);
+		SoundManager.instance.PlayOneShot(SoundManager.Sound.TypeSound);
 	}
 }

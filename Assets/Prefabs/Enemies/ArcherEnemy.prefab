@@ -293,9 +293,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myHealthSystem: {fileID: 1239654276277433329}
   arrowObject: {fileID: 1756522373299351973, guid: 4bb7dbbd1164e5242a08b3ff49fbfb6b, type: 3}
-  shootCooldown: 0
+  shootCooldown: 3
   arrowSpeed: 8
-  arrowDamage: 100
+  arrowDamage: 10
   myAnimator: {fileID: 1239654276135239461}
   readyParticles: {fileID: 5829383001061662297}
   shootParticles: {fileID: 5696583208834413476}
