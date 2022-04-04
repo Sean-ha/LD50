@@ -13,6 +13,9 @@ public class ObjectCreator : MonoBehaviour
 	[SerializeField] private GameObject hitParticles;
 	[SerializeField] private GameObject expandingExplosion;
 	[SerializeField] private GameObject bloodParticles;
+	[SerializeField] private GameObject playerBloodParticles;
+	[SerializeField] private GameObject enemySpawnParticles;
+
 
 	private void Awake()
 	{
@@ -66,6 +69,20 @@ public class ObjectCreator : MonoBehaviour
 	public GameObject CreateBloodParticles(Vector2 position)
 	{
 		GameObject created = Instantiate(bloodParticles, position, Quaternion.identity);
+
+		return created;
+	}
+
+	public GameObject CreatePlayerBloodParticles(Vector2 position)
+	{
+		GameObject created = Instantiate(playerBloodParticles, position, Quaternion.identity);
+
+		return created;
+	}
+
+	public GameObject CreateEnemySpawnParticles(Vector2 position)
+	{
+		GameObject created = Instantiate(enemySpawnParticles, position, Quaternion.identity);
 
 		return created;
 	}

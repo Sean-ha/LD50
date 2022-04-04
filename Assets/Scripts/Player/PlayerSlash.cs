@@ -19,12 +19,10 @@ public class PlayerSlash : MonoBehaviour
 		if (collision.gameObject.layer == LayerMask.NameToLayer("EnemySolid"))
 		{
 			collision.GetComponent<HealthSystem>()?.TakeDamage(damage);
-			collision.GetComponent<FlashWhite>().InitiateWhiteFlash();
 			ObjectCreator.instance.CreateHitParticles(collision.transform.position);
-			ObjectCreator.instance.CreateBloodParticles(collision.transform.position);
 			ObjectCreator.instance.CreateExpandingExplosion(collision.transform.position, Color.white, 2f, duration: 0.25f);
 
-			SoundManager.instance.PlayOneShot(SoundManager.Sound.PlayerAttackHits);
+			SoundManager.instance.PlayOneShot(SoundManager.Sound.PlayerAttackHits, createNewSource: true);
 		}
 	}
 }

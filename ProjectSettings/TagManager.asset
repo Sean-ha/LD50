@@ -19,8 +19,8 @@ TagManager:
   - EnemyAttack
   - PlayerAttack
   - Platform
-  - 
-  - 
+  - PlatformDetector
+  - BloodAttractor
   - 
   - 
   - 
@@ -50,4 +50,10 @@ TagManager:
     locked: 0
   - name: ExpandingExplosion
     uniqueID: 4179847935
+    locked: 0
+  - name: Projectiles
+    uniqueID: 3249918337
+    locked: 0
+  - name: UI
+    uniqueID: 2726687677
     locked: 0

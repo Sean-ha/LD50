@@ -6,6 +6,7 @@ public class MapGenerator : MonoBehaviour
 {
 	public static MapGenerator instance;
 
+	[SerializeField] private Transform startingGround;
 	[SerializeField] private GameObject groundObject;
 	[SerializeField] private GameObject platformObject;
 
@@ -16,6 +17,11 @@ public class MapGenerator : MonoBehaviour
 	private void Awake()
 	{
 		instance = this;
+
+		// Create ground for starting segment
+		GeneratePlatforms(startingGround);
+
+		CreateGroundSegment(startingGround, startingGround.GetChild(0).GetComponent<GroundSegment>());
 	}
 
 	// Source = current player's ground segment. Generate the new ground to the left/right of it

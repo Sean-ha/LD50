@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+	public static PlayerController instance;
+
 	[SerializeField] private TextMeshPro debugText;
 	[SerializeField] public Transform feetPos;
 	[SerializeField] private float moveSpeed;
@@ -36,8 +38,7 @@ public class PlayerController : MonoBehaviour
 	private float horizontal;
 
 	private bool isGrounded;
-	// Platform you are currently standing on, or null if not on a platform
-	private Collider2D onPlatform;
+	private bool onPlatform;
 
 	private bool isAttacking;
 
@@ -45,6 +46,10 @@ public class PlayerController : MonoBehaviour
 	private Vector2 velocityOffset = Vector2.zero;
 
 	private float jumpAssist;
+
+	// OverlapBox results
+	private Collider2D[] results = new Collider2D[5];
+	private ContactFilter2D filter;
 
 	public enum PlayerState
 	{
@@ -60,9 +65,14 @@ public class PlayerController : MonoBehaviour
 
 	private void Awake()
 	{
+		instance = this;
+
 		rb = GetComponent<Rigidbody2D>();
 		myAnimator = GetComponent<PlayerAnimator>();
 		myCol = GetComponent<Collider2D>();
+
+		filter = new ContactFilter2D();
+		filter.SetLayerMask(groundLayers);
 	}
 
 	private void Start()
@@ -106,10 +116,16 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Drop through platform
-		if (onPlatform != null && isGrounded && (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)))
+		if (onPlatform && isGrounded && (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)))
 		{
-			Physics2D.IgnoreCollision(onPlatform, myCol);
-			StartCoroutine(ReenableCollision(onPlatform));
+			foreach (Collider2D col in results)
+			{
+				if (col != null)
+				{
+					Physics2D.IgnoreCollision(col, myCol);
+					StartCoroutine(ReenableCollision(col));
+				}
+			}
 		}
 
 		myAnimator.SetAnimation(this, currState);
@@ -200,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
 	private void CheckAttackInput()
 	{
-		if (Input.GetKeyDown(KeyCode.J) && currAttackCooldown <= 0 && !isAttacking)
+		if ((Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.C)) && currAttackCooldown <= 0 && !isAttacking)
 		{
 			currState = PlayerState.Attacking;
 			isAttacking = true;
@@ -226,21 +242,21 @@ public class PlayerController : MonoBehaviour
 
 	private bool IsGrounded()
 	{
-		Collider2D overlap = Physics2D.OverlapBox(feetPos.position, new Vector2(0.45f, 0.02f), 0f, groundLayers);
+		int count = Physics2D.OverlapBox(feetPos.position, new Vector2(0.45f, 0.02f), 0f, filter, results);
 		
 
-		if (overlap != null)
+		if (count != 0)
 		{
-			if (overlap.gameObject.layer == LayerMask.NameToLayer("Platform"))
-				onPlatform = overlap;
+			if (results[0].gameObject.layer == LayerMask.NameToLayer("Platform"))
+				onPlatform = true;
 			else
-				onPlatform = null;
+				onPlatform = false;
 
 			return true;
 		}
 		else
 		{
-			onPlatform = null;
+			onPlatform = false;
 
 			return false;
 		}

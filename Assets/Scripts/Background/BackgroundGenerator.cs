@@ -34,43 +34,56 @@ public class BackgroundGenerator : MonoBehaviour
 
 		List<Transform> treeList;
 
+
+		int distance = 3;
+		float minWidth = 2f;
+		float maxWidth = 2.75f;
+
 		// Generate far trees
-		treeList = GenerateTrees(startPos, farTree, 4, 1.75f, 2.75f, rightDistance);
+		treeList = GenerateTrees(startPos, farTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = farTreeHolderMid;
 		// Right side
-		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), farTree, 4, 1.75f, 2.75f, rightDistance);
+		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), farTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = farTreeHolderRight;
 		// Left side
-		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), farTree, 4, 1.75f, 2.75f, rightDistance);
+		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), farTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = farTreeHolderLeft;
 
 
+		distance = 5;
+		minWidth = 2.8f;
+		maxWidth = 3.7f;
 
 		// Generate mid trees
-		treeList = GenerateTrees(startPos, midTree, 6, 2.5f, 3.5f, rightDistance);
+		treeList = GenerateTrees(startPos, midTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = midTreeHolderMid;
-		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), midTree, 6, 2.5f, 3.5f, rightDistance);
+		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), midTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = midTreeHolderRight;
-		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), midTree, 6, 2.5f, 3.5f, rightDistance);
+		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), midTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = midTreeHolderLeft;
 
 
+
+		distance = 8;
+		minWidth = 3.75f;
+		maxWidth = 4.65f;
+
 		// Generate close trees
-		treeList = GenerateTrees(startPos, closeTree, 10, 3.25f, 4.5f, rightDistance);
+		treeList = GenerateTrees(startPos, closeTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = closeTreeHolderMid;
 		// Generate right side trees
-		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), closeTree, 10, 3.25f, 4.5f, rightDistance);
+		treeList = GenerateTrees(startPos + new Vector2(rightDistance, 0), closeTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = closeTreeHolderRight;
 		// Generate left side trees
-		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), closeTree, 10, 3.25f, 4.5f, rightDistance);
+		treeList = GenerateTrees(startPos - new Vector2(rightDistance, 0), closeTree, distance, minWidth, maxWidth, rightDistance);
 		foreach (Transform t in treeList)
 			t.parent = closeTreeHolderLeft;
 	}

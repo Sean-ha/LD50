@@ -5,18 +5,13 @@ using DG.Tweening;
 
 public class Platform : MonoBehaviour
 {
-	private void OnEnable()
+	public Vector2 GetRandomPositionOnPlatform()
 	{
-		DOVirtual.DelayedCall(0.1f, () => gameObject.SetActive(false));
-	}
+		float left = transform.position.x;
+		float right = transform.position.x + transform.lossyScale.x;
 
-	private void OnTriggerEnter2D(Collider2D collision)
-	{
-		if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
-		{
-			// If platform that collided with you is bigger, then destroy self
-			if (collision.transform.localScale.x >= transform.parent.localScale.x)
-				Destroy(transform.parent.gameObject);
-		}
+		float rand = Random.Range(left, right);
+
+		return new Vector2(rand, transform.position.y);
 	}
 }

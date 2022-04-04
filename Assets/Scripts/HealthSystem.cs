@@ -6,7 +6,15 @@ using UnityEngine.Events;
 public class HealthSystem : MonoBehaviour
 {
 	[SerializeField] private float maxHealth;
-	[SerializeField] private UnityEvent<float> onTakeDamage;
+
+	// Params: currHealth, maxHealth
+	[SerializeField] private UnityEvent<float, float> onTakeDamage;
+	[SerializeField] private UnityEvent<float, float> onGainHealth;
+
+	[SerializeField] private UnityEvent onDeath;
+	
+
+	[SerializeField] private bool destroyOnDeath;
 
 	private float currHealth;
 
@@ -20,13 +28,48 @@ public class HealthSystem : MonoBehaviour
 	{
 		currHealth -= amount;
 
-		onTakeDamage.Invoke(currHealth);
+		if (currHealth < 0)
+			currHealth = 0;
 
-		print(currHealth);
+		onTakeDamage.Invoke(currHealth, maxHealth);
 
 		if (currHealth <= 0)
 		{
-			// Die
+			onDeath.Invoke();
+
+			if (destroyOnDeath)
+				Destroy(gameObject);
 		}
+	}
+
+	public void GainHealth(float amount)
+	{
+		currHealth += amount;
+
+		if (currHealth > maxHealth)
+			currHealth = maxHealth;
+
+		onGainHealth.Invoke(currHealth, maxHealth);
+	}
+
+	// TODO: Move these elsewhere probably
+	public void RestorePlayerHealth()
+	{
+		PlayerHealthWrapper.instance.GainHealth(GameStats.healthRestorePerKill);
+	}
+
+	public void RestorePlayerHealthToFull()
+	{
+		PlayerHealthWrapper.instance.GainHealth(999);
+	}
+
+	public void CreateBloodParticles()
+	{
+		ObjectCreator.instance.CreateBloodParticles(transform.position);
+	}
+
+	public void UnparentObject(Transform trans)
+	{
+		trans.parent = null;
 	}
 }

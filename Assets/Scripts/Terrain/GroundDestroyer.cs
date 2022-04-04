@@ -8,8 +8,6 @@ public class GroundDestroyer : MonoBehaviour
 	{
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
 		{
-			print("Touched ground, destroying it");
-
 			collision.transform.GetChild(0).GetComponent<GroundSegment>().DestroySegment();
 		}
 	}
