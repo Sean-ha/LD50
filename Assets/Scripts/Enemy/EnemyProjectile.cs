@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class EnemyProjectile : MonoBehaviour
 {
@@ -15,10 +16,17 @@ public class EnemyProjectile : MonoBehaviour
 
 	private Tween myTweens;
 
+	private Action<EnemyProjectile> onDestroy;
+
 
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
+	}
+
+	public void OnDestroyProjectile(Action<EnemyProjectile> onDestroy)
+	{
+		this.onDestroy = onDestroy;
 	}
 
 	public void SetupProjectile(float dangle, float damage, float speed)
@@ -66,5 +74,11 @@ public class EnemyProjectile : MonoBehaviour
 
 			Destroy(gameObject);
 		}
+	}
+
+	private void OnDestroy()
+	{
+		if (onDestroy != null)
+			onDestroy.Invoke(this);
 	}
 }

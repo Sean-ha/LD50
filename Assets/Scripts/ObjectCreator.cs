@@ -66,6 +66,16 @@ public class ObjectCreator : MonoBehaviour
 		return created;
 	}
 
+	public GameObject CreateExpandingExplosionSortingLayer(Vector2 position, Color color, float radius, string layer, int order, float duration = 0.15f)
+	{
+		GameObject created = Instantiate(expandingExplosion, position, Quaternion.identity);
+		ExpandingExplosion expl = created.GetComponent<ExpandingExplosion>();
+		expl.SetExplosion(color, radius, explosionDuration: duration);
+		expl.SetSortingLayer(layer, order);
+
+		return created;
+	}
+
 	public GameObject CreateBloodParticles(Vector2 position)
 	{
 		GameObject created = Instantiate(bloodParticles, position, Quaternion.identity);

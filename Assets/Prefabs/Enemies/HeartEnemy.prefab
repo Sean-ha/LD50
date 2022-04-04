@@ -5072,6 +5072,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destroyOnDeath: 1
+  isEnemy: 0
 --- !u!61 &5710020764579931214
 BoxCollider2D:
   m_ObjectHideFlags: 0

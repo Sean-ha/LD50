@@ -185,6 +185,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destroyOnDeath: 1
+  isEnemy: 1
 --- !u!61 &1239654276277433343
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -290,10 +291,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c0c58cffcfc5048a50acec2b48685d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myHealthSystem: {fileID: 1239654276277433329}
   arrowObject: {fileID: 1756522373299351973, guid: 4bb7dbbd1164e5242a08b3ff49fbfb6b, type: 3}
   shootCooldown: 5
   arrowSpeed: 8
-  arrowDamage: 10
+  arrowDamage: 100
   myAnimator: {fileID: 1239654276135239461}
   readyParticles: {fileID: 5829383001061662297}
   shootParticles: {fileID: 5696583208834413476}

@@ -42,6 +42,9 @@ public class PlayerAnimator : MonoBehaviour
 			case PlayerController.PlayerState.Falling:
 				animator.Play("PlayerFall");
 				break;
+			case PlayerController.PlayerState.Dead:
+				animator.Play("PlayerDead");
+				break;
 		}
 
 		currAnim = newAnim;

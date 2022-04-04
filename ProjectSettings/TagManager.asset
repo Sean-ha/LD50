@@ -57,3 +57,9 @@ TagManager:
   - name: UI
     uniqueID: 2726687677
     locked: 0
+  - name: Death
+    uniqueID: 7826671
+    locked: 0
+  - name: DeathEffects
+    uniqueID: 1750465193
+    locked: 0

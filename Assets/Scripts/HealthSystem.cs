@@ -8,13 +8,14 @@ public class HealthSystem : MonoBehaviour
 	[SerializeField] private float maxHealth;
 
 	// Params: currHealth, maxHealth
-	[SerializeField] private UnityEvent<float, float> onTakeDamage;
-	[SerializeField] private UnityEvent<float, float> onGainHealth;
+	public UnityEvent<float, float> onTakeDamage;
+	public UnityEvent<float, float> onGainHealth;
 
-	[SerializeField] private UnityEvent onDeath;
+	public UnityEvent onDeath;
 	
 
 	[SerializeField] private bool destroyOnDeath;
+	[SerializeField] private bool isEnemy;
 
 	private float currHealth;
 
@@ -36,6 +37,11 @@ public class HealthSystem : MonoBehaviour
 		if (currHealth <= 0)
 		{
 			onDeath.Invoke();
+
+			if (isEnemy)
+			{
+				GameManager.instance.enemiesSlain += 1;
+			}
 
 			if (destroyOnDeath)
 				Destroy(gameObject);

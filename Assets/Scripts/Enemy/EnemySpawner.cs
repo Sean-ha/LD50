@@ -10,9 +10,13 @@ public class EnemySpawner : MonoBehaviour
 
 	[SerializeField] private float timeToSpawnNext;
 
+	private HashSet<BehavingEnemy> enemies = new HashSet<BehavingEnemy>();
+
+	private Coroutine spawningCR;
+
 	private void Start()
 	{
-		StartCoroutine(EnemySpawning());
+		spawningCR = StartCoroutine(EnemySpawning());
 	}
 
 	private IEnumerator EnemySpawning()
@@ -25,7 +29,27 @@ public class EnemySpawner : MonoBehaviour
 			ObjectCreator.instance.CreateEnemySpawnParticles(spawnPos);
 			ObjectCreator.instance.CreateExpandingExplosion(spawnPos, Color.black, 2f, 0.2f);
 			SoundManager.instance.PlayPositionedOneShot(SoundManager.Sound.EnemySpawn, spawnPos);
-			Instantiate(archerEnemy, spawnPos, Quaternion.identity);
+			GameObject enemy = Instantiate(archerEnemy, spawnPos, Quaternion.identity);
+
+			var behav = enemy.GetComponentInChildren<BehavingEnemy>();
+
+			behav.myHealthSystem.onDeath.AddListener(() => enemies.Remove(behav));
+
+			enemies.Add(behav);
+		}
+	}
+
+	public void StopSpawning()
+	{
+		if (spawningCR != null)
+			StopCoroutine(spawningCR);
+	}
+
+	public void KillAllBehaviors()
+	{
+		foreach (BehavingEnemy e in enemies)
+		{
+			e.KillBehavior();
 		}
 	}
 }

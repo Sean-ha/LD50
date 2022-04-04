@@ -8,6 +8,8 @@ public class PlayerHealthWrapper : MonoBehaviour
 
 	private HealthSystem myHealthSystem;
 
+	private Coroutine bleedingOutCR;
+
 	private void Awake()
 	{
 		instance = this;
@@ -16,7 +18,7 @@ public class PlayerHealthWrapper : MonoBehaviour
 
 	private void Start()
 	{
-		StartCoroutine(BleedingOut());
+		bleedingOutCR = StartCoroutine(BleedingOut());
 	}
 
 	public void GainHealth(float amount)
@@ -32,5 +34,11 @@ public class PlayerHealthWrapper : MonoBehaviour
 			yield return new WaitForSeconds(1f / ticksPerSecond);
 			myHealthSystem.TakeDamage(GameStats.healthLostPerSecond / ticksPerSecond);
 		}
+	}
+
+	public void StopBleedingOut()
+	{
+		if (bleedingOutCR != null)
+			StopCoroutine(bleedingOutCR);
 	}
 }

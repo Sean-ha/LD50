@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArcherEnemyBow : MonoBehaviour
+public class ArcherEnemyBow : BehavingEnemy
 {
 	[SerializeField] private GameObject arrowObject;
 	[SerializeField] private float shootCooldown;
@@ -13,9 +13,13 @@ public class ArcherEnemyBow : MonoBehaviour
 	[SerializeField] private ParticleSystem readyParticles;
 	[SerializeField] private ParticleSystem shootParticles;
 
+	private Coroutine behaviorCR;
+
+	private HashSet<GameObject> myProjectiles = new HashSet<GameObject>();
+
 	private void Start()
 	{
-		StartCoroutine(ShootingBehavior());
+		behaviorCR = StartCoroutine(ShootingBehavior());
 	}
 
 	private IEnumerator ShootingBehavior()
@@ -41,7 +45,23 @@ public class ArcherEnemyBow : MonoBehaviour
 
 	private void ShootProjectile()
 	{
-		GameObject proj = Instantiate(arrowObject, transform.position, Quaternion.identity);
-		proj.GetComponent<EnemyProjectile>().SetupProjectile(transform.rotation.eulerAngles.z, arrowDamage, arrowSpeed);
+		GameObject projObj = Instantiate(arrowObject, transform.position, Quaternion.identity);
+		EnemyProjectile proj = projObj.GetComponent<EnemyProjectile>();
+		proj.OnDestroyProjectile((EnemyProjectile destroyedProj) => myProjectiles.Remove(destroyedProj.gameObject));
+		proj.SetupProjectile(transform.rotation.eulerAngles.z, arrowDamage, arrowSpeed);
+		myProjectiles.Add(projObj);
+	}
+
+	public override void KillBehavior()
+	{
+		if (behaviorCR != null)
+			StopCoroutine(behaviorCR);
+
+		foreach (GameObject o in myProjectiles)
+		{
+			Destroy(o);
+		}
+
+		myProjectiles.Clear();
 	}
 }

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 	public static PlayerController instance;
 
 	[SerializeField] private TextMeshPro debugText;
+	[SerializeField] private SpriteRenderer mySprite;
 	[SerializeField] public Transform feetPos;
 	[SerializeField] private float moveSpeed;
 	[SerializeField] private float jumpForce;
@@ -58,7 +59,8 @@ public class PlayerController : MonoBehaviour
 		Jumping,
 		DoubleJumping,
 		Falling,
-		Attacking
+		Attacking,
+		Dead
 	}
 	private PlayerState currState;
 
@@ -73,11 +75,6 @@ public class PlayerController : MonoBehaviour
 
 		filter = new ContactFilter2D();
 		filter.SetLayerMask(groundLayers);
-	}
-
-	private void Start()
-	{
-		Application.targetFrameRate = 60;
 	}
 
 	private void Update()
@@ -317,5 +314,21 @@ public class PlayerController : MonoBehaviour
 			yield return null;
 
 		Physics2D.IgnoreCollision(coll, myCol, false);
+	}
+
+	public void DisableSelfOnDeath()
+	{
+		rb.velocity = Vector2.zero;
+
+		currState = PlayerState.Dead;
+		myAnimator.SetAnimation(this, currState);
+
+		myCol.enabled = false;
+		rb.isKinematic = true;
+
+		mySprite.sortingLayerName = "Death";
+		mySprite.sortingOrder = 0;
+
+		enabled = false;
 	}
 }
