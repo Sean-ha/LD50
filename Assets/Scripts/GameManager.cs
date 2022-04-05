@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 		fadeInBlack.color = Color.black;
 
 		// Disable game systems
-		PlayerController.instance.gameObject.SetActive(false);
+		PlayerController.instance.enabled = false;
 
 		DOVirtual.DelayedCall(0.5f, () =>
 		{
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(0.75f);
 
-		PlayerController.instance.gameObject.SetActive(true);
+		PlayerController.instance.enabled = true;
 		fadeInBlack.DOColor(new Color(0, 0, 0, 0), 0.75f);
 
 		yield return new WaitForSeconds(1f);
